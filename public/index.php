@@ -2,6 +2,6 @@
 
 require "../bootstrap.php";
 
-use App\Dispatcher;
-$dispatch = new Dispatcher();
-$dispatch->dispatch();
+// todo use $_SERVER['REQUEST_URI'] in router
+
+require_once('../routes.php');

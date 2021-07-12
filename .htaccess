@@ -1,2 +1,2 @@
 RewriteEngine on
-RewriteRule ^([a-zA-Z0-9\-\_\/]*)$ public/$1
+RewriteRule ^([^/]+)/? public/index.php?url=$1 [L,QSA]

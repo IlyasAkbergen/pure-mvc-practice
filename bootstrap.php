@@ -25,3 +25,6 @@ $capsule->setAsGlobal();
 // Setup the Eloquent ORM.
 $capsule->bootEloquent();
 $capsule->bootEloquent();
+
+
+(new App\Controllers\TaskController)->index();

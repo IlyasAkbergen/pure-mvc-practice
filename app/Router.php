@@ -3,79 +3,32 @@ namespace App;
 
 class Router
 {
-    private $routes;
-    private $controllerName      = 'base';
-    private $actionName          = 'undefinedRoute';
-    private $params              = [];
-    private $controllerNamespace = 'App\Controllers';
-    private $routeId             = null;
+    private static $validRoutes = [];
 
-    public function __construct()
+    // TODO PARSE ARGUMENTS FROM URL
+
+    public static function get(string $route, $payload)
     {
-        $routesPath = ROOT . '/config/routes.php';
-        $this->routes = include($routesPath);
+        self::set($route, $payload, 'GET');
     }
 
-    public function getController()
+    public static function post(string $route, $payload)
     {
-        $controllerFileName = ucfirst($this->controllerName) . 'Controller';
-        return "{$this->controllerNamespace}\\{$controllerFileName}";
+        self::set($route, $payload, 'POST');
     }
 
-    public function getActionName()
+    public static function put(string $route, $payload)
     {
-        return $this->actionName;
+        self::set($route, $payload, 'PUT');
     }
 
-    public function getParams()
+    private static function set(string $route, array $payload, $type)
     {
-        return $this->params;
-    }
-
-    private function getURI ()
-    {
-        if (!empty($_SERVER['REQUEST_URI'])) {
-            return trim($_SERVER['REQUEST_URI'], '/public/');
-        }
-    }
-
-    public function parse ()
-    {
-        $uri = $this->getURI();
-
-        foreach ($this->routes as $uriPattern => $item) {
-            if (preg_match("/$uriPattern/", $uri)) {
-                $path = $item['path'];
-
-                if (isset($item['namespace'])) {
-                    $this->controllerNamespace = $item['namespace'];
-                }
-
-                $segments = explode('/', $path);
-
-                $this->controllerName = array_shift($segments);
-
-                $this->actionName = array_shift($segments);
-
-                $this->params = $segments;
-            }
-        }
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getRouteId()
-    {
-        return $this->routeId;
-    }
-
-    /**
-     * @param mixed $routeId
-     */
-    protected function setRouteId($routeId)
-    {
-        $this->routeId = $routeId;
+        self::$validRoutes[] = [
+            'route'      => $route,
+            'controller' => $payload[ 0 ],
+            'action'     => $payload[ 1 ],
+            'type'       => $type,
+        ];
     }
 }

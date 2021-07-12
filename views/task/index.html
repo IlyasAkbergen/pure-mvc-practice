@@ -3,6 +3,10 @@
 {% block title %}Home Page{% endblock %}
 
 {% block content %}
-<h1>Home</h1>
-<p>Welcome to the home page!</p>
+<h1>Tasks list: </h1>
+<ul>
+    {% foreach($tasks as $task): %}
+    <li>{{ $task->id . ') ' . $task->text . ', ' . $task->email }}</li>
+    {% endforeach; %}
+</ul>
 {% endblock %}

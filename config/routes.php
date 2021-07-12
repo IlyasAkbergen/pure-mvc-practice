@@ -4,7 +4,7 @@ return [
         'path'      => 'task/index',
         'namespace' => 'App\Controllers',
     ],
-    'task/{id}' => [
+    'task' => [
         'path'      => 'task/show',
         'namespace' => 'App\Controllers',
     ],
