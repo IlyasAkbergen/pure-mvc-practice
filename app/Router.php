@@ -1,29 +1,32 @@
 <?php
 namespace App;
 
+use Illuminate\Database\RecordsNotFoundException;
+
 class Router
 {
     private static $routes = [];
+    const HOME_PATH_NAME = 'tasks.index';
 
-    public static function get(string $route, $payload)
+    public static function get(string $path, string $name, $payload)
     {
-        self::set($route, $payload, 'GET');
+        self::set($path, $name, $payload, 'GET');
     }
 
-    public static function post(string $route, $payload)
+    public static function post(string $path, string $name, $payload)
     {
-        self::set($route, $payload, 'POST');
+        self::set($path, $name, $payload, 'POST');
     }
 
-    public static function put(string $route, $payload)
+    public static function put(string $path, string $name, $payload)
     {
-        self::set($route, $payload, 'PUT');
+        self::set($path, $name, $payload, 'PUT');
     }
 
-    private static function set(string $route, array $payload, $type)
+    private static function set(string $path, string $name, array $payload, $type)
     {
-        self::$routes[ $route ] = [
-            'route'      => $route,
+        self::$routes[ $name ] = [
+            'path'       => $path,
             'controller' => $payload[ 0 ],
             'action'     => $payload[ 1 ],
             'type'       => $type,
@@ -31,32 +34,38 @@ class Router
     }
 
     public function route($method, $path, $params) {
-        $path = "{$method} " . $this->withEscapedSlashes("/{$path}");
+        $path = "{$method} " . $this->withEscapedSlashes("{$path}");
 
-        foreach ($this::$routes as $pattern => $route) {
+        foreach ($this::$routes as $route) {
+            $pattern = $route[ 'path' ];
             $patternParams = $this->patternParams($pattern);
+
             if (!empty($patternParams)) {
                 $pattern = $this->withParams($pattern);
             }
             $pattern = $this->withEscapedSlashes($pattern);
             $pattern = $this->withMethod($pattern);
+            $args = [];
+            $match = $this->requestMatches($pattern, $path, $patternParams, $args);
 
-            if ($this->requestMatches($pattern, $path, $patternParams, $params)) {
-                $this->handle($route, $params);
+            if ($match) {
+                $this->handle($route, $args, $params);
                 return;
             }
         }
 
         http_response_code(404);
-        if (array_key_exists('/', $this::$routes)) {
-            $this->handle($this->routes('/'));
+        if (array_key_exists(self::HOME_PATH_NAME, $this::$routes)) {
+            $this->handle($this::$routes[self::HOME_PATH_NAME]);
         }
     }
 
     private function requestMatches($pattern, $path, $patternParams, &$params) {
         if (preg_match("/^{$pattern}$/i", $path, $matches)) {
-            for ($i = 0; $i < sizeof($patternParams); $i++) {
-                $params[$patternParams[$i]] = $matches[$i + 1];
+            if ($patternParams) {
+                for ($i = 0; $i < sizeof($patternParams); $i++) {
+                    $params[ $patternParams[ $i ] ] = $matches[ $i + 1 ];
+                }
             }
             return true;
         }
@@ -82,10 +91,20 @@ class Router
         return preg_replace('/{\w+}/', '([^:]+)', $pattern);
     }
 
-    private function handle($route, $params)
+    public function handle($route, $args = [], $params = [])
     {
         $controller = $route['controller'];
         $action     = $route['action'];
-        (new $controller)->{$action}(...$params);
+        (new $controller)->__callAction($action, $args, $params);
+    }
+
+    public function redirect($route_name)
+    {
+        try {
+            $route = self::$routes[$route_name];
+            $this->handle($route);
+        } catch (\Exception $e) {
+            throw new RecordsNotFoundException();
+        }
     }
 }

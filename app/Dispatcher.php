@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Database\RecordsNotFoundException;
+
 class Dispatcher {
     private Router $router;
 
@@ -10,10 +12,14 @@ class Dispatcher {
     }
 
     function dispatch() {
-        $this->router->route(
-            $_SERVER['REQUEST_METHOD'],
-            $_SERVER['REQUEST_URI'],
-            $_REQUEST
-        );
+        try {
+            $this->router->route(
+                $_SERVER[ 'REQUEST_METHOD' ],
+                parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH),
+                $_REQUEST
+            );
+        } catch (RecordsNotFoundException $e) {
+            $this->router->redirect('404');
+        }
     }
 }

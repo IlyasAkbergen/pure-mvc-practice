@@ -1,0 +1,11 @@
+{% extends layouts/main.html %}
+
+{% block title %}Task show{% endblock %}
+
+{% block content %}
+<h1>Tasks #{{ $task->id }}</h1>
+<ul>
+    <li>{{ $task->text }}</li>
+    <li>{{ $task->email }}</li>
+</ul>
+{% endblock %}
