@@ -10,12 +10,17 @@ class TaskController extends BaseController
 {
     public function index()
     {
-        $per_page = 3;
-        $page = $this->requestParams->get('page', 1);
-        $sort_field = $this
+        $per_page    = 3;
+        $page        = $this->requestParams->get('page', 1);
+
+        $tasks_count = Task::count();
+        $all_pages   = $tasks_count
+            ? ceil($tasks_count / $per_page)
+            : 0;
+
+        $sort_field  = $this
             ->requestParams
-            ->get('sort_field')
-        ;
+            ->get('sort_field');
 
         $sort_field = in_array($sort_field, Task::SORT_FIELDS)
             ? $sort_field
@@ -29,7 +34,7 @@ class TaskController extends BaseController
                      ->get()
         ;
 
-        $this->view('task/index', compact('tasks', 'page'));
+        $this->view('task/index', compact('tasks', 'page', 'all_pages'));
     }
 
     public function create()

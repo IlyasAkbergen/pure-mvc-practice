@@ -3,10 +3,62 @@
 {% block title %}Home Page{% endblock %}
 
 {% block content %}
-<h1>Tasks list: </h1>
-<ul>
-    {% foreach($tasks as $task): %}
-    <li>{{ $task->id . ') ' . $task->text . ', ' . $task->email }}</li>
-    {% endforeach; %}
-</ul>
+
+<section class="content py-5">
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-4 mb-2">
+                <a href="/task/create" class="btn btn-warning">Add Task</a>
+            </div>
+            <div class="col-8 justify-content-end">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item {{ $page == 1 ? 'disabled' : '' }}">
+                        <a class="page-link" href="?page={{{ $page - 1 }}}">
+                            Previous
+                        </a>
+                    </li>
+
+                    {% for($i=1; $i <= $all_pages; $i++): %}
+                    <li class="page-item {{ $page == $i ? 'disabled' : '' }}">
+                        <a class="page-link" href="?page={{ $i }}">
+                            {{ $i }}
+                        </a>
+                    </li>
+                    {% endfor; %}
+
+                    <li class="page-item {{ $page == $all_pages ? 'disabled' : '' }}">
+                        <a class="page-link" href="?page={{{ $page + 1 }}}">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mb-4">
+            {% foreach($tasks as $task): %}
+            <div class="col-lg-4">
+                <div class="card mb-5 mb-lg-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted text-uppercase text-center">
+                            {{{ $task->username }}}
+                        </h5>
+                        <h6 class="card-title text-center">
+                            {{{ $task->email }}}
+                        </h6>
+                        <hr>
+                        <p class="text-center text-muted">
+                            {{{ $task->text }}}
+                        </p>
+                        <a href="task/{{{ $task->id }}}/edit"
+                           class="btn btn-block btn-rounded btn-warning text-uppercase"
+                        >
+                            Редактировать
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endforeach; %}
+        </div>
+    </div>
+</section>
 {% endblock %}
