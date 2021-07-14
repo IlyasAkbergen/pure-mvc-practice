@@ -16,6 +16,12 @@ interface TaskContract
     const FIELD_CREATED_AT = 'created_at';
     const FIELD_UPDATED_AT = 'updated_at';
 
+    const FILLABLE = [
+        self::FIELD_USERNAME,
+        self::FIELD_TEXT,
+        self::FIELD_EMAIL,
+    ];
+
     const SORT_FIELDS = [
         self::FIELD_ID,
         self::FIELD_USERNAME,

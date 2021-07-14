@@ -24,4 +24,3 @@ $capsule->setAsGlobal();
 
 // Setup the Eloquent ORM.
 $capsule->bootEloquent();
-$capsule->bootEloquent();

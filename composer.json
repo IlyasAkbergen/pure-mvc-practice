@@ -6,6 +6,7 @@
   },
   "require": {
     "vlucas/phpdotenv": "^5.1",
-    "illuminate/database": "^8.49"
+    "illuminate/database": "^8.49",
+    "rakit/validation": "^1.4"
   }
 }

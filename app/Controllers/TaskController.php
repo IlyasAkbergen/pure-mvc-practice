@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Task;
 use App\Router;
+use Rakit\Validation\Validator;
 
 class TaskController extends BaseController
 {
@@ -28,10 +29,7 @@ class TaskController extends BaseController
                      ->get()
         ;
 
-        $this->view('task/index', [
-            'tasks' => $tasks,
-            'page'  => $page,
-        ]);
+        $this->view('task/index', compact('tasks', 'page'));
     }
 
     public function create()
@@ -43,15 +41,40 @@ class TaskController extends BaseController
     {
         $task = Task::findOrFail($id);
 
-        $this->view('task/show', [
-            'task' => $task,
-        ]);
+        $this->view('task/show', compact('task'));
     }
     
     public function store()
     {
-        // todo validate data
-        // todo redirect to index
+        $input = $this->requestParams->only(Task::FILLABLE)->toArray();
+
+        $validation = (new Validator())
+            ->make(
+                $input,
+                [
+                    'username' => 'required|max:255',
+                    'email'    => 'required|email',
+                    'text'     => 'required|max:255',
+                ]
+            );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $errors = $validation->errors();
+            $this->view(
+                'task/create',
+                [
+                    'input'  => $input,
+                    'errors' => $errors,
+                ]
+            );
+            return;
+        }
+
+        $task = Task::create($input);
+
+       $this->view('task/show', compact('task'));
     }
     
     public function edit($id)

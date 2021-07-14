@@ -14,7 +14,11 @@ class BaseController
 
     public function __callAction($action, $args = [], $params = [])
     {
-        $this->requestParams = new Collection($params);
+        $this->requestParams = (new Collection($params))
+            ->map(function ($item) {
+                return trim($item, "`\"'/\|{};:");
+            })
+        ;
         return call_user_func_array([$this, $action], $args);
     }
 

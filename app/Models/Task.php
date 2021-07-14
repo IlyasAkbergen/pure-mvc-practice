@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model implements TaskContract
 {
-
+    protected $fillable = self::FILLABLE;
 }

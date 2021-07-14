@@ -24,13 +24,13 @@ class Router
         self::set($path, $name, $payload, 'PUT');
     }
 
-    private static function set(string $path, string $name, array $payload, $type)
+    private static function set(string $path, string $name, array $payload, $method)
     {
         self::$routes[ $name ] = [
             'path'       => $path,
             'controller' => $payload[ 0 ],
             'action'     => $payload[ 1 ],
-            'type'       => $type,
+            'method'     => $method,
         ];
     }
 
@@ -46,7 +46,7 @@ class Router
                 $pattern = $this->withParams($pattern);
             }
             $pattern = $this->withEscapedSlashes($pattern);
-            $pattern = $this->withMethod($pattern);
+            $pattern = $this->withMethod($pattern, $route[ 'method' ]);
             $args    = [];
             $match   = $this->requestMatches($pattern, $path, $patternParams, $args);
 
@@ -88,10 +88,10 @@ class Router
         return str_replace('/', ':', $pattern);
     }
 
-    private function withMethod($pattern)
+    private function withMethod($pattern, $method = 'GET')
     {
         return !preg_match("/^[A-Z]+ .+$/i", $pattern)
-            ? "GET {$pattern}"
+            ? "{$method} {$pattern}"
             : $pattern;
     }
 
@@ -111,7 +111,7 @@ class Router
     {
         try {
             $route = self::$routes[ $route_name ];
-            self::handle($route);
+            header('Location: ' . $route['path']);
         } catch (\Exception $e) {
             throw new RecordsNotFoundException();
         }
