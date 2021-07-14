@@ -34,7 +34,13 @@ class TaskController extends BaseController
                      ->get()
         ;
 
-        $this->view('task/index', compact('tasks', 'page', 'all_pages'));
+        $this->view('task/index', [
+            'tasks'       => $tasks,
+            'page'        => $page,
+            'all_pages'   => $all_pages,
+            'sort_field'  => $sort_field,
+            'sort_fields' => Task::SORT_FIELDS,
+        ]);
     }
 
     public function create()

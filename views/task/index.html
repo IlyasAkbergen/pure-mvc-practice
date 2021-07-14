@@ -6,34 +6,50 @@
 
 <section class="content py-5">
     <div class="container">
-        <div class="row mb-2">
-            <div class="col-4 mb-2">
+        <div class="d-flex">
+            <div class="p-2">
                 <a href="/task/create" class="btn btn-warning">Add Task</a>
             </div>
-            <div class="col-8 justify-content-end">
-                <ul class="pagination justify-content-end">
+            <div class="p-2">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sort By: {{{ $sort_field ?: '...' }}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {% foreach($sort_fields as $field): %}
+                            <a class="dropdown-item" href="?sort_field={{ $field }}&page={{ $page }}">
+                                {{ $field }}
+                            </a>
+                        {% endforeach; %}
+                    </div>
+                </div>
+            </div>
+            <div class="ml-auto p-2">
+                <ul class="pagination">
                     <li class="page-item {{ $page == 1 ? 'disabled' : '' }}">
-                        <a class="page-link" href="?page={{{ $page - 1 }}}">
+                        <a class="page-link" href="?page={{{ $page - 1 }}}&sort_field={{ $sort_field }}">
                             Previous
                         </a>
                     </li>
 
                     {% for($i=1; $i <= $all_pages; $i++): %}
                     <li class="page-item {{ $page == $i ? 'disabled' : '' }}">
-                        <a class="page-link" href="?page={{ $i }}">
+                        <a class="page-link" href="?page={{ $i }}&sort_field={{ $sort_field }}">
                             {{ $i }}
                         </a>
                     </li>
                     {% endfor; %}
 
                     <li class="page-item {{ $page == $all_pages ? 'disabled' : '' }}">
-                        <a class="page-link" href="?page={{{ $page + 1 }}}">
+                        <a class="page-link" href="?page={{{ $page + 1 }}}&sort_field={{ $sort_field }}">
                             Next
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
+
         <div class="row mb-4">
             {% foreach($tasks as $task): %}
             <div class="col-lg-4">
@@ -52,7 +68,7 @@
                         <a href="task/{{{ $task->id }}}/edit"
                            class="btn btn-block btn-rounded btn-warning text-uppercase"
                         >
-                            Редактировать
+                            Edit
                         </a>
                     </div>
                 </div>
