@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Database\RecordsNotFoundException;
@@ -33,11 +34,12 @@ class Router
         ];
     }
 
-    public function route($method, $path, $params) {
+    public function route($method, $path, $params)
+    {
         $path = "{$method} " . $this->withEscapedSlashes("{$path}");
 
         foreach ($this::$routes as $route) {
-            $pattern = $route[ 'path' ];
+            $pattern       = $route[ 'path' ];
             $patternParams = $this->patternParams($pattern);
 
             if (!empty($patternParams)) {
@@ -45,8 +47,8 @@ class Router
             }
             $pattern = $this->withEscapedSlashes($pattern);
             $pattern = $this->withMethod($pattern);
-            $args = [];
-            $match = $this->requestMatches($pattern, $path, $patternParams, $args);
+            $args    = [];
+            $match   = $this->requestMatches($pattern, $path, $patternParams, $args);
 
             if ($match) {
                 $this->handle($route, $args, $params);
@@ -56,11 +58,12 @@ class Router
 
         http_response_code(404);
         if (array_key_exists(self::HOME_PATH_NAME, $this::$routes)) {
-            $this->handle($this::$routes[self::HOME_PATH_NAME]);
+            $this->handle($this::$routes[ self::HOME_PATH_NAME ]);
         }
     }
 
-    private function requestMatches($pattern, $path, $patternParams, &$params) {
+    private function requestMatches($pattern, $path, $patternParams, &$params)
+    {
         if (preg_match("/^{$pattern}$/i", $path, $matches)) {
             if ($patternParams) {
                 for ($i = 0; $i < sizeof($patternParams); $i++) {
@@ -72,37 +75,43 @@ class Router
         return false;
     }
 
-    private function patternParams($pattern) {
+    private function patternParams($pattern)
+    {
         $matches = [];
         if (preg_match_all('/{(\w+)}/', $pattern, $matches)) {
-            return $matches[1];
+            return $matches[ 1 ];
         }
     }
 
-    private function withEscapedSlashes($pattern) {
+    private function withEscapedSlashes($pattern)
+    {
         return str_replace('/', ':', $pattern);
     }
 
-    private function withMethod($pattern) {
-        return !preg_match("/^[A-Z]+ .+$/i", $pattern) ? "GET {$pattern}" : $pattern;
+    private function withMethod($pattern)
+    {
+        return !preg_match("/^[A-Z]+ .+$/i", $pattern)
+            ? "GET {$pattern}"
+            : $pattern;
     }
 
-    private function withParams($pattern) {
+    private function withParams($pattern)
+    {
         return preg_replace('/{\w+}/', '([^:]+)', $pattern);
     }
 
-    public function handle($route, $args = [], $params = [])
+    public static function handle($route, $args = [], $params = [])
     {
-        $controller = $route['controller'];
-        $action     = $route['action'];
+        $controller = $route[ 'controller' ];
+        $action     = $route[ 'action' ];
         (new $controller)->__callAction($action, $args, $params);
     }
 
-    public function redirect($route_name)
+    public static function redirect($route_name)
     {
         try {
-            $route = self::$routes[$route_name];
-            $this->handle($route);
+            $route = self::$routes[ $route_name ];
+            self::handle($route);
         } catch (\Exception $e) {
             throw new RecordsNotFoundException();
         }

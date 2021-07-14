@@ -18,8 +18,13 @@ class BaseController
         return call_user_func_array([$this, $action], $args);
     }
 
+    public function view($path, $data = [])
+    {
+        Template::view($path, $data);
+    }
+
     public function notFound()
     {
-        Template::view('404');
+        $this->view('404');
     }
 }
