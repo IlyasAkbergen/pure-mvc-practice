@@ -48,6 +48,9 @@ section.content {
     transition: all 0.2s;
 }
 
+.pointable:hover {
+    cursor: pointer;
+}
 /* Hover Effects on Card */
 
 @media (min-width: 992px) {

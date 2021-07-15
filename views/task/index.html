@@ -14,7 +14,7 @@
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Sort By: {{{ $sort_field ?: '...' }}}
+                        Sorted By: {{{ $sort_field ?: 'id' }}}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         {% foreach($sort_fields as $field): %}
@@ -53,11 +53,16 @@
         <div class="row mb-4">
             {% foreach($tasks as $task): %}
             <div class="col-lg-4">
-                <div class="card mb-5 mb-lg-0">
-                    <div class="card-body">
+                <div class="card mb-5 mb-lg-0 pointable" onclick="window.location.href = '/task/{{ $task->id }}'">
+                    <div class="card-header">
                         <h5 class="card-title text-muted text-uppercase text-center">
                             {{{ $task->username }}}
+                            {% if ($task->is_done): %}
+                                <span class="badge badge-success">Done</span>
+                            {% endif; %}
                         </h5>
+                    </div>
+                    <div class="card-body">
                         <h6 class="card-title text-center">
                             {{{ $task->email }}}
                         </h6>

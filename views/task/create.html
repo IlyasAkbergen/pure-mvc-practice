@@ -3,27 +3,50 @@
 {% block title %}New Task Form{% endblock %}
 
 {% block content %}
-    <h1>New Task Form</h1>
-    <form action="/task" method="POST">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" value="{{ $input['username'] ?? '' }}"><br>
+<section class="content pb-2">
+    <h1 class="text-center text-warning">New Task</h1>
+    <div class="d-flex justify-content-center mt-2 mb-4">
+        <div class="card p-2">
+            <div class="card-body">
+                <form action="/task" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username:</label><br>
+                        <input type="text" id="username" name="username"
+                               value="{{ $input['username'] ?? '' }}"
+                               class="{{ isset($errors) && $errors->has('username') ? 'border border-danger' : '' }}"
+                        >
+                        {% if (isset($errors) && $errors->has('username') ): %}
+                            <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('username') }}</p>
+                        {% endif; %}
+                        <br>
+                    </div>
 
-        <label for="email">Email:</label><br>
-        <p>{{ isset($errors) && $errors->has('email') ? 'has error' : '' }}</p>
-        <input type="text" id="email" name="email" value="{{ $input['email'] ?? '' }}"><br>
+                    <div class="form-group">
+                        <label for="email">Email:</label><br>
+                        <input type="text" id="email"
+                               class="{{ isset($errors) && $errors->has('email') ? 'border border-danger' : '' }}"
+                               name="email"
+                               value="{{ $input['email'] ?? '' }}"
+                        >
+                        {% if (isset($errors) && $errors->has('email')): %}
+                            <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('email') }}</p>
+                        {% endif; %}
+                    </div>
 
-        <label for="text">Text:</label><br>
-        <input type="text" id="text" name="text" value="{{ $input['text'] ?? '' }}"><br>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
-    {% if (isset($errors)): %}
-        <div class="alert alert-danger">
-            <ul>
-                {% foreach ($errors->all() as $error): %}
-                    <li>{{ $error }}</li>
-                {% endforeach; %}
-            </ul>
+                    <div class="form-group">
+                        <label for="text">Text:</label><br>
+                        <textarea id="text" name="text"
+                               class="{{ isset($errors) && $errors->has('text') ? 'border border-danger' : '' }}"
+                        >{{ $input['text'] ?? '' }}</textarea>
+                        {% if (isset($errors) && $errors->has('text') ): %}
+                            <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('text') }}</p>
+                        {% endif; %}
+                        <br>
+                    </div>
+                    <input class="btn btn-rounded btn-block btn-warning text-uppercase" type="submit" value="Submit">
+                </form>
+            </div>
         </div>
-    {% endif; %}
+    </div>
+</section>
 {% endblock %}

@@ -57,7 +57,16 @@ class TaskController extends BaseController
     
     public function store()
     {
-        $input = $this->requestParams->only(Task::FILLABLE)->toArray();
+        $input = $this->requestParams
+            ->only(
+                [
+                    Task::FIELD_USERNAME,
+                    Task::FIELD_TEXT,
+                    Task::FIELD_EMAIL,
+                ]
+            )
+            ->toArray()
+        ;
 
         $validation = (new Validator())
             ->make(
@@ -85,25 +94,60 @@ class TaskController extends BaseController
 
         $task = Task::create($input);
 
-       $this->view('task/show', compact('task'));
+        $this->view('task/show', compact('task'));
     }
     
     public function edit($id)
     {
         // todo check auth
-        if (true) {
+        if (false) {
             return Router::redirect('tasks.index');
         }
+
         $task = Task::findOrFail($id);
 
         $this->view('task/edit', [
-           'task' => $task,
+           'task'   => $task->toArray(),
         ]);
     }
     
     public function update($id)
     {
-        // todo auth check and validate data
-        // todo redirect to show
+        $input = $this->requestParams
+            ->only(Task::FILLABLE)
+            ->toArray()
+        ;
+
+        $validation = (new Validator())
+            ->make(
+                $input,
+                [
+                    'username' => 'required|max:255',
+                    'email'    => 'required|email',
+                    'text'     => 'required|max:255',
+                    'is_done'  => 'required|boolean',
+                ]
+            );
+
+        $validation->validate();
+
+        if ($validation->fails()) {
+            $errors = $validation->errors();
+            $input['id'] = $id;
+            $this->view(
+                'task/edit',
+                [
+                    'task'   => $input,
+                    'errors' => $errors,
+                ]
+            );
+            return;
+        }
+
+        $task = Task::findOrFail($id);
+
+        $task->update($input);
+
+        $this->view('task/show', compact('task'));
     }
 }

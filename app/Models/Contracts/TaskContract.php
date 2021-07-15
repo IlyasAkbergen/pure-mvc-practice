@@ -12,6 +12,7 @@ interface TaskContract
     const FIELD_USERNAME = 'username';
     const FIELD_EMAIL    = 'email';
     const FIELD_TEXT     = 'text';
+    const FIELD_IS_DONE  = 'is_done';
 
     const FIELD_CREATED_AT = 'created_at';
     const FIELD_UPDATED_AT = 'updated_at';
@@ -20,6 +21,7 @@ interface TaskContract
         self::FIELD_USERNAME,
         self::FIELD_TEXT,
         self::FIELD_EMAIL,
+        self::FIELD_IS_DONE,
     ];
 
     const SORT_FIELDS = [

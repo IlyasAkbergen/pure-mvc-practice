@@ -1,11 +1,69 @@
 {% extends layouts/main.html %}
 
-{% block title %}Edit task form{% endblock %}
+{% block title %}New Task Form{% endblock %}
 
 {% block content %}
-<h1>Edit Task #{{ $task->id }}</h1>
-<ul>
-    <li>{{ $task->text }}</li>
-    <li>{{ $task->email }}</li>
-</ul>
+<section class="content pb-2">
+    <h1 class="text-center text-warning">Edit Task #{{ $task['id'] }}</h1>
+    <div class="d-flex justify-content-center mt-2 mb-4">
+        <div class="card p-4">
+            <form action="/task/{{ $task['id'] }}/update" method="post">
+                <div class="form-group">
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="username" name="username"
+                           value="{{ $task['username'] ?? '' }}"
+                           class="{{ isset($errors) && $errors->has('username') ? 'border border-danger' : '' }}"
+                    >
+                    {% if (isset($errors) && $errors->has('username') ): %}
+                    <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('username') }}</p>
+                    {% endif; %}
+
+                    <br>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label><br>
+                    <input type="text" id="email"
+                           class="{{ isset($errors) && $errors->has('email') ? 'border border-danger' : '' }}"
+                           name="email"
+                           value="{{ $task['email'] ?? '' }}"
+                    >
+                    {% if (isset($errors) && $errors->has('email')): %}
+                    <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('email') }}</p>
+                    {% endif; %}
+
+                </div>
+
+                <div class="form-group">
+                    <label for="text">Text:</label><br>
+                    <input type="text" id="text" name="text"
+                           value="{{ $task['text'] ?? '' }}"
+                           class="{{ isset($errors) && $errors->has('text') ? 'border border-danger' : '' }}"
+                    >
+                    {% if (isset($errors) && $errors->has('text') ): %}
+                    <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('text') }}</p>
+                    {% endif; %}
+                    <br>
+                </div>
+                <div class="form-check">
+                    <input type="hidden" name="is_done" value="0">
+                    <input type="checkbox"
+                           class="form-check-input"
+                           name="is_done"
+                           value="1"
+                           id="field-is-done"
+                           {{ isset($task['is_done']) && $task['is_done'] ? 'checked' : '' }}
+                    >
+                    <label class="form-check-label" for="field-is-done">
+                        Is Done
+                    </label>
+                    {% if (isset($errors) && $errors->has('is_done') ): %}
+                        <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('is_done') }}</p>
+                    {% endif; %}
+                </div>
+                <input class="btn btn-block btn-rounded btn-warning text-uppercase" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</section>
 {% endblock %}

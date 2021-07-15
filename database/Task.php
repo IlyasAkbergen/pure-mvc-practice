@@ -15,6 +15,9 @@ if (!Capsule::schema()->hasTable(Task::TABLE_NAME)) {
                    $table->string(Task::FIELD_USERNAME);
                    $table->string(Task::FIELD_EMAIL);
                    $table->string(Task::FIELD_TEXT);
+                   $table->boolean(Task::FIELD_IS_DONE)
+                         ->default(0)
+                   ;
                    $table->timestamps();
                }
            )
