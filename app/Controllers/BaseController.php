@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Template;
+use App\Utility\Auth;
 use Illuminate\Support\Collection;
 
 class BaseController
@@ -24,6 +25,7 @@ class BaseController
 
     public function view($path, $data = [])
     {
+        $data['user'] = Auth::user();
         Template::view($path, $data);
     }
 

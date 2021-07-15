@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Task;
 use App\Router;
+use App\Utility\Auth;
 use Rakit\Validation\Validator;
 
 class TaskController extends BaseController
@@ -99,8 +100,7 @@ class TaskController extends BaseController
     
     public function edit($id)
     {
-        // todo check auth
-        if (false) {
+        if (!Auth::isAuthenticated()) {
             return Router::redirect('tasks.index');
         }
 
@@ -113,6 +113,10 @@ class TaskController extends BaseController
     
     public function update($id)
     {
+        if (!Auth::isAuthenticated()) {
+            return Router::redirect('tasks.index');
+        }
+
         $input = $this->requestParams
             ->only(Task::FILLABLE)
             ->toArray()

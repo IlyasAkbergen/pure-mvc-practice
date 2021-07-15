@@ -1,0 +1,40 @@
+{% extends layouts/main.html %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="content pb-2">
+    <h1 class="text-center text-warning">Login</h1>
+    <div class="d-flex justify-content-center mt-2 mb-4">
+        <div class="card p-2">
+            <div class="card-body">
+                <form action="/authenticate" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username:</label><br>
+                        <input type="text" id="username" name="username"
+                               value="{{ $input['username'] ?? '' }}"
+                               class="{{ isset($errors) && $errors->has('username') ? 'border border-danger' : '' }}"
+                        >
+                        {% if (isset($errors) && $errors->has('username') ): %}
+                            <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('username') }}</p>
+                        {% endif; %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label><br>
+                        <input type="password" id="password"
+                               class="{{ isset($errors) && $errors->has('password') ? 'border border-danger' : '' }}"
+                               name="password"
+                        >
+                        {% if (isset($errors) && $errors->has('password')): %}
+                            <p class="text text-danger mb-0 mt-1 text-small">{{ $errors->first('password') }}</p>
+                        {% endif; %}
+                    </div>
+
+                    <input class="btn btn-rounded btn-block btn-warning text-uppercase" type="submit" value="Login">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

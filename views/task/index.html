@@ -70,11 +70,14 @@
                         <p class="text-center text-muted">
                             {{{ $task->text }}}
                         </p>
-                        <a href="task/{{{ $task->id }}}/edit"
-                           class="btn btn-block btn-rounded btn-warning text-uppercase"
-                        >
-                            Edit
-                        </a>
+
+                        {% if ( isset($user) ): %}
+                            <a href="task/{{{ $task->id }}}/edit"
+                               class="btn btn-block btn-rounded btn-warning text-uppercase"
+                            >
+                                Edit
+                            </a>
+                        {% endif; %}
                     </div>
                 </div>
             </div>
