@@ -17,7 +17,7 @@ class BaseController
     {
         $this->requestParams = (new Collection($params))
             ->map(function ($item) {
-                return trim($item, "`\"'/\|{};:");
+                return trim($item, "`\"'/\|{};:=");
             })
         ;
         return call_user_func_array([$this, $action], $args);
