@@ -18,6 +18,9 @@ if (!Capsule::schema()->hasTable(Task::TABLE_NAME)) {
                    $table->boolean(Task::FIELD_IS_DONE)
                          ->default(0)
                    ;
+                   $table->boolean(Task::FIELD_EDITED_BY_ADMIN)
+                         ->default(0)
+                   ;
                    $table->timestamps();
                }
            )

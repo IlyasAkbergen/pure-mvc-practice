@@ -8,11 +8,12 @@ interface TaskContract
 {
     const TABLE_NAME = 'tasks';
 
-    const FIELD_ID       = 'id';
-    const FIELD_USERNAME = 'username';
-    const FIELD_EMAIL    = 'email';
-    const FIELD_TEXT     = 'text';
-    const FIELD_IS_DONE  = 'is_done';
+    const FIELD_ID              = 'id';
+    const FIELD_USERNAME        = 'username';
+    const FIELD_EMAIL           = 'email';
+    const FIELD_TEXT            = 'text';
+    const FIELD_IS_DONE         = 'is_done';
+    const FIELD_EDITED_BY_ADMIN = 'edited_by_admin';
 
     const FIELD_CREATED_AT = 'created_at';
     const FIELD_UPDATED_AT = 'updated_at';
@@ -22,6 +23,7 @@ interface TaskContract
         self::FIELD_TEXT,
         self::FIELD_EMAIL,
         self::FIELD_IS_DONE,
+        self::FIELD_EDITED_BY_ADMIN,
     ];
 
     const SORT_FIELDS = [

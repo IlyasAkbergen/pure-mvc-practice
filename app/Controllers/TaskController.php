@@ -150,6 +150,8 @@ class TaskController extends BaseController
 
         $task = Task::findOrFail($id);
 
+        $input[ Task::FIELD_EDITED_BY_ADMIN ] = $task->text !== $input[ Task::FIELD_TEXT ];
+
         $task->update($input);
 
         $this->view('task/show', compact('task'));

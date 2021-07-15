@@ -61,15 +61,19 @@
                                 <span class="badge badge-success">Done</span>
                             {% endif; %}
                         </h5>
-                    </div>
-                    <div class="card-body">
                         <h6 class="card-title text-center">
                             {{{ $task->email }}}
                         </h6>
-                        <hr>
+                    </div>
+                    <div class="card-body">
                         <p class="text-center text-muted">
                             {{{ $task->text }}}
                         </p>
+                        {% if ( $task->edited_by_admin ): %}
+                            <p class="text-center text-warning">
+                                Edited by admin
+                            </p>
+                        {% endif; %}
 
                         {% if ( isset($user) ): %}
                             <a href="task/{{{ $task->id }}}/edit"

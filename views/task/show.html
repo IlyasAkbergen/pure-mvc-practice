@@ -21,6 +21,11 @@
                 <p class="text-center text-muted">
                     {{{ $task->text }}}
                 </p>
+                {% if ( $task->edited_by_admin ): %}
+                    <p class="text-center text-warning">
+                        Edited by admin
+                    </p>
+                {% endif; %}
             </div>
         </div>
     </div>
