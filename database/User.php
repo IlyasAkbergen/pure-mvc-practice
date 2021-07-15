@@ -3,6 +3,8 @@
 require "../bootstrap.php";
 
 use App\Models\Contracts\UserContract;
+use App\Models\User;
+use App\Utility\Hash;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 if (!Capsule::schema()->hasTable(UserContract::TABLE_NAME)) {
@@ -18,4 +20,11 @@ if (!Capsule::schema()->hasTable(UserContract::TABLE_NAME)) {
                }
            )
     ;
+
+    User::create(
+        [
+            UserContract::FIELD_USERNAME => 'admin',
+            UserContract::FIELD_PASSWORD => Hash::generate('123'),
+        ]
+    );
 }
